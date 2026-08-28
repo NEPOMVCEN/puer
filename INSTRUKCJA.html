@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Puer 3.0 — instrukcja wdrożenia</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:18px 16px 60px;background:#1a1240;color:#e8e6f5;
+  font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,system-ui,sans-serif}
+.w{max-width:720px;margin:0 auto}
+h1{font-size:26px;color:#5cf0a0;margin:0 0 4px}
+.sub{color:#a49ecf;font-size:14px;margin-bottom:26px}
+h2{font-size:19px;color:#5cf0a0;margin:34px 0 10px;padding-top:16px;border-top:1px solid #4a3f8f}
+h2:first-of-type{border-top:none;padding-top:0}
+ol{padding-left:22px;margin:0}
+ol li{margin-bottom:13px}
+ul{padding-left:20px}
+code{background:#241a5e;border:1px solid #4a3f8f;border-radius:5px;padding:1px 6px;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px;word-break:break-all}
+.box{background:#241a5e;border:1px solid #4a3f8f;border-radius:12px;padding:13px 15px;margin:14px 0}
+.warn{background:rgba(255,176,32,.12);border-color:rgba(255,176,32,.5)}
+.stop{background:rgba(255,107,107,.12);border-color:rgba(255,107,107,.5)}
+.ok{background:rgba(92,240,160,.10);border-color:rgba(92,240,160,.45)}
+.box b{color:#ffb020}
+.stop b{color:#ff6b6b}
+.ok b{color:#5cf0a0}
+.files{list-style:none;padding:0}
+.files li{background:#241a5e;border:1px solid #4a3f8f;border-radius:9px;padding:9px 12px;margin-bottom:7px;
+  font-family:ui-monospace,Menlo,Consolas,monospace;font-size:14px}
+.files li span{font-family:inherit;color:#a49ecf;font-size:12.5px;display:block;margin-top:3px;
+  font-family:-apple-system,system-ui,sans-serif}
+.t{color:#a49ecf;font-size:14px}
+</style>
+</head>
+<body>
+<div class="w">
+
+<h1>Puer Aeternus 3.0</h1>
+<div class="sub">Instrukcja przenosin: z pliku na telefonie → na własny adres w internecie.<br>
+Czas: około 25 minut. Nie trzeba nic umieć programować.</div>
+
+<div class="box stop">
+<b>ZANIM ZACZNIESZ — ZRÓB TO PIERWSZE</b><br>
+Nowa apka wystartuje <b>pusta</b>. To nie błąd. Przeglądarka przypisuje zapisane dane do adresu,
+a adres się zmienia — więc dane trzeba przenieść ręcznie, plikiem. Krok 1 jest po to,
+żebyś ich nie stracił. Nie pomijaj go i nie kasuj starego pliku apki, dopóki nowa nie zadziała.
+</div>
+
+<h2>Krok 1. Zgraj swoje dane ze starej apki</h2>
+<ol>
+<li>Otwórz starą apkę tak jak zwykle.</li>
+<li>Wejdź w <b>Opcje</b> (zębatka na dole ekranu głównego).</li>
+<li>Zjedź do sekcji <b>Dane</b>.</li>
+<li>W polu „Nazwa pliku kopii" wpisz <code>przenosiny</code> — łatwiej ją potem znaleźć.</li>
+<li>Naciśnij <b>Eksportuj dane do pliku JSON</b>.</li>
+<li>Telefon pobierze plik do folderu <b>Pobrane</b>. Sprawdź, że tam jest — nazwa kończy się na <code>.json</code>.</li>
+</ol>
+<div class="box warn"><b>Nie idź dalej</b>, dopóki nie widzisz tego pliku w Pobranych. To jest cała Twoja historia.</div>
+
+<h2>Krok 2. Załóż konto na GitHubie</h2>
+<p class="t">GitHub to darmowy serwis, na którym postawimy apkę. Konto jest darmowe na zawsze.</p>
+<ol>
+<li>Wejdź na <code>github.com</code> i naciśnij <b>Sign up</b>.</li>
+<li>Podaj e-mail, wymyśl hasło i nazwę użytkownika.
+  <div class="box">Nazwa użytkownika stanie się częścią adresu Twojej apki, więc wybierz krótką i bez polskich znaków — na przykład <code>nepo</code>.</div>
+</li>
+<li>Potwierdź e-mail (GitHub wyśle Ci kod).</li>
+</ol>
+
+<h2>Krok 3. Utwórz miejsce na pliki</h2>
+<ol>
+<li>Po zalogowaniu naciśnij zielony przycisk <b>New</b> (albo wejdź na <code>github.com/new</code>).</li>
+<li>W polu <b>Repository name</b> wpisz: <code>puer</code></li>
+<li>Zaznacz <b>Public</b>.
+  <div class="box warn"><b>Musi być Public.</b> Przy „Private" darmowy hosting nie zadziała.
+  Uwaga: Twoje <b>dane osobiste nie trafiają na GitHub</b> — tam ląduje sam program.
+  Wpisy, zadania i nawyki zostają wyłącznie w pamięci Twojego telefonu.</div>
+</li>
+<li>Nie zaznaczaj nic innego. Naciśnij <b>Create repository</b>.</li>
+</ol>
+
+<h2>Krok 4. Wgraj pliki apki</h2>
+<p class="t">Masz ode mnie 5 plików. Wszystkie muszą wylądować obok siebie, bez żadnego folderu.</p>
+<ul class="files">
+<li>index.html <span>sama apka</span></li>
+<li>sw.js <span>sprawia, że apka startuje z pamięci telefonu i działa bez internetu</span></li>
+<li>manifest.webmanifest <span>opis apki: nazwa, kolory, ikona</span></li>
+<li>icon-192.png <span>ikona na ekran główny</span></li>
+<li>icon-512.png <span>ikona w większym rozmiarze</span></li>
+</ul>
+<ol>
+<li>Na stronie swojego nowego repozytorium naciśnij <b>Add file</b> → <b>Upload files</b>.</li>
+<li>Przeciągnij tam wszystkie 5 plików naraz (albo naciśnij „choose your files" i zaznacz je wszystkie).</li>
+<li>Poczekaj, aż wszystkie się wgrają — <code>index.html</code> waży 1,4 MB, więc może chwilę zejść.</li>
+<li>Zjedź na dół i naciśnij zielony <b>Commit changes</b>.</li>
+</ol>
+<div class="box warn"><b>Sprawdź teraz:</b> na liście plików ma być dokładnie 5 pozycji i żadnego folderu.
+Jeśli widzisz folder — usuń wszystko i wgraj jeszcze raz, tym razem same pliki.</div>
+
+<h2>Krok 5. Włącz hosting</h2>
+<ol>
+<li>Na górze repozytorium naciśnij <b>Settings</b> (zakładka z zębatką).</li>
+<li>W menu po lewej wybierz <b>Pages</b>.</li>
+<li>W sekcji <b>Source</b> wybierz z listy <b>Deploy from a branch</b>.</li>
+<li>Poniżej, w <b>Branch</b>, wybierz <code>main</code>, a obok zostaw <code>/ (root)</code>.</li>
+<li>Naciśnij <b>Save</b>.</li>
+<li>Odczekaj 1–3 minuty i odśwież stronę. Na górze pojawi się adres w ramce:
+  <div class="box"><code>https://TWOJANAZWA.github.io/puer/</code></div>
+</li>
+</ol>
+
+<h2>Krok 6. Otwórz na telefonie i dodaj ikonę</h2>
+<ol>
+<li>Wpisz ten adres w Chrome na telefonie. Apka powinna się otworzyć — na razie pusta.</li>
+<li>Naciśnij <b>trzy kropki</b> w prawym górnym rogu Chrome.</li>
+<li>Wybierz <b>Dodaj do ekranu głównego</b> (lub „Zainstaluj aplikację").</li>
+<li>Zatwierdź. Na ekranie głównym pojawi się ikona Puera.</li>
+<li><b>Od teraz otwieraj apkę tylko przez tę ikonę</b> — nie przez plik i nie przez Chrome.</li>
+</ol>
+<div class="box ok"><b>Co się właśnie zmieniło:</b> apka ma teraz własną ikonę i otwiera się bez paska adresu,
+jak zwykły program. Kopia siedzi w pamięci telefonu, więc działa też bez internetu.
+Nie musi już czekać, aż Android odnajdzie plik w multimediach — a to ten etap zjadał
+u Ciebie kilkanaście sekund po resecie.</div>
+
+<h2>Krok 7. Wgraj swoje dane</h2>
+<ol>
+<li>Otwórz apkę z <b>nowej ikony</b>.</li>
+<li>Wejdź w <b>Opcje</b> → sekcja <b>Dane</b>.</li>
+<li>Naciśnij <b>Importuj dane z pliku JSON</b>.</li>
+<li>Wskaż plik z Kroku 1 (folder <b>Pobrane</b>, nazwa zawiera „przenosiny").</li>
+<li>Potwierdź. Apka wczyta wszystko: zadania, nawyki, dziennik, wyzwania, punkty.</li>
+</ol>
+
+<h2>Krok 8. Sprawdź, czy się udało</h2>
+<ol>
+<li>Twoje zadania i nawyki są na miejscu.</li>
+<li>Zamknij apkę, otwórz ponownie z ikony — dane nadal są.</li>
+<li>Włącz tryb samolotowy i otwórz z ikony — apka działa mimo braku internetu.</li>
+<li><b>Zresetuj telefon</b> i otwórz z ikony. To jest ten test, o który nam chodziło.</li>
+</ol>
+<div class="box ok"><b>Dopiero teraz</b> możesz usunąć stary plik apki z telefonu.
+Plik z kopią danych zostaw — to Twoje zabezpieczenie.</div>
+
+<h2>Gdy coś nie działa</h2>
+<div class="box"><b>Adres pokazuje „404"</b><br>
+Hosting jeszcze się nie zbudował — odczekaj 3 minuty i odśwież. Jeśli dalej nic:
+sprawdź, czy plik nazywa się dokładnie <code>index.html</code> (małymi literami) i czy leży bezpośrednio w repozytorium, nie w folderze.</div>
+
+<div class="box"><b>Apka się otwiera, ale jest pusta</b><br>
+Tak ma być przed Krokiem 7. Zrób import kopii.</div>
+
+<div class="box"><b>Nie ma opcji „Dodaj do ekranu głównego"</b><br>
+Sprawdź, czy adres zaczyna się od <code>https://</code>. Odśwież stronę raz i spróbuj ponownie —
+Chrome potrzebuje chwili, żeby zauważyć, że to aplikacja.</div>
+
+<div class="box"><b>Wgrałem nową wersję apki, a widzę starą</b><br>
+Tak działa pamięć podręczna: pierwsze otwarcie pokazuje starą wersję, a nową pobiera w tle.
+Zamknij i otwórz apkę drugi raz. Jeśli chcesz to wymusić od razu — patrz sekcja niżej.</div>
+
+<div class="box stop"><b>Zgubiłem dane</b><br>
+Stary plik apki na telefonie nadal ma swoją pamięć — otwórz go tak jak dawniej i zrób eksport jeszcze raz.
+Dlatego proszę Cię, żebyś go nie kasował, dopóki wszystko nie działa.</div>
+
+<h2>Jak później wgrywać nowe wersje</h2>
+<ol>
+<li>Wejdź do swojego repozytorium na GitHubie.</li>
+<li><b>Add file</b> → <b>Upload files</b> → wrzuć nowy <code>index.html</code> → <b>Commit changes</b>.
+  GitHub sam nadpisze stary plik.</li>
+<li>Jeśli dostaniesz ode mnie także nowy <code>sw.js</code> — wgraj i jego. Zawiera podbity numer wersji,
+  dzięki któremu telefon wie, że ma pobrać apkę od nowa.</li>
+<li>Na telefonie otwórz apkę <b>dwa razy</b>: pierwsze uruchomienie pobiera nową wersję w tle, drugie ją pokazuje.</li>
+</ol>
+<div class="box"><b>Twoje dane zostają na telefonie i nie mają z tym nic wspólnego</b> — wgrywanie nowej wersji
+programu ich nie rusza. Ale przed większą aktualizacją i tak zrób eksport. Dwie minuty, a spokój na lata.</div>
+
+</div>
+</body>
+</html>
