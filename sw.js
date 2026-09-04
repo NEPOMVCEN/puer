@@ -9,7 +9,7 @@
 
    UWAGA przy aktualizacji apki: podnieś numer w CACHE poniżej (np. na 'puer-3-1').
    Zmiana nazwy powoduje pobranie plików od nowa i skasowanie starej kopii. */
-var CACHE = 'puer-3-7-2';
+var CACHE = 'puer-3-8-0';
 var PLIKI = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', function (e) {
