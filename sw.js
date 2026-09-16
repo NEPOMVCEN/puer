@@ -9,8 +9,8 @@
 
    UWAGA przy aktualizacji apki: podnieś numer w CACHE poniżej (np. na 'puer-3-1').
    Zmiana nazwy powoduje pobranie plików od nowa i skasowanie starej kopii. */
-var CACHE = 'puer-3-9-5';
-var PLIKI = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
+var CACHE = 'puer-3-11';
+var PLIKI = ['./', './index.html'];
 
 self.addEventListener('install', function (e) {
   e.waitUntil(
@@ -26,7 +26,7 @@ self.addEventListener('activate', function (e) {
   e.waitUntil(
     caches.keys().then(function (klucze) {
       return Promise.all(klucze.map(function (k) {
-        if (k !== CACHE) return caches.delete(k);   // sprzątamy poprzednie wersje
+        if (k.indexOf('puer-') === 0 && k !== CACHE) return caches.delete(k);   // sprzątamy poprzednie wersje
       }));
     }).then(function () {
       return self.clients.claim();
